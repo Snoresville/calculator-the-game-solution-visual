@@ -1,0 +1,28 @@
+{
+    "version": "2.0.0"
+    // "tasks": [
+    // 	{
+    // 		"label": "Solve Levels (Output to log.txt)",
+    // 		"type": "shell",
+    // 		"command": "tsc -p . && node ./src/main.js > log.txt",
+    // 		"problemMatcher": [
+    // 			"$tsc"
+    // 		],
+    // 		"group": {
+    // 			"kind": "build",
+    // 			"isDefault": true
+    // 		}
+    // 	},
+    // 	{
+    // 		"label": "Solve Levels (Output to cmd)",
+    // 		"type": "shell",
+    // 		"command": "tsc -p . && node ./src/main.js",
+    // 		"problemMatcher": [
+    // 			"$tsc"
+    // 		],
+    // 		"group": {
+    // 			"kind": "build"
+    // 		}
+    // 	}
+    // ]
+}
