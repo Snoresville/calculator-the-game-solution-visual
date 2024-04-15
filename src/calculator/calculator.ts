@@ -1,4 +1,5 @@
 import { Button } from "./button";
+import { INITIAL_STATE } from "./constants";
 import { CalculatorState } from "./types";
 
 export class Calculator {
@@ -20,8 +21,8 @@ export class Calculator {
 
         this.depthCalculate(
             {
+                ...INITIAL_STATE,
                 value: initial,
-                operationModifier: 0,
             },
             moves
         );

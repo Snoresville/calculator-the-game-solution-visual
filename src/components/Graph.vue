@@ -11,7 +11,11 @@ import {
 // @ts-ignore This is obviously imported...
 import Gradient from "javascript-color-gradient";
 import { onMounted, onUnmounted, ref } from "vue";
-import { CalculatorState, generateLevelSolutions } from "../calculator";
+import {
+    CalculatorState,
+    INITIAL_STATE,
+    generateLevelSolutions,
+} from "../calculator";
 import { Level } from "../calculator/levels";
 
 const { selectedLevel } = defineProps<{
@@ -92,8 +96,8 @@ function renderLevel(level?: Level) {
             .getColors();
 
         let current: CalculatorState = {
+            ...INITIAL_STATE,
             value: initial,
-            operationModifier: 0,
         };
         for (const [index, operation] of Object.entries(solution)) {
             const prev = current;
@@ -115,7 +119,7 @@ function renderLevel(level?: Level) {
                 nodeLinks[prev.value][current.value] = {
                     source: nodeGraph[prev.value],
                     target: nodeGraph[current.value],
-                    label: operation.getLabel(current),
+                    label: operation.getLabel(prev),
                 };
             }
         }

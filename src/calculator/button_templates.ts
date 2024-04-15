@@ -92,7 +92,7 @@ function insertRight(n: number) {
     );
 }
 
-function replace(before: number, after: number) {
+function replace(before: number | string, after: number | string) {
     return new Button(
         (state: CalculatorState) => {
             const regex = new RegExp(`${before}`, "g");
@@ -254,6 +254,64 @@ function addButtonValue(n: number) {
     );
 }
 
+function store() {
+    return [
+        // Store value into the store
+        new Button(
+            (state: CalculatorState) => {
+                return {
+                    ...state,
+                    stored: state.value >= 0 ? state.value : null,
+                };
+            },
+            (state) => `STORE ${state.value}`
+        ),
+
+        // Similar to insertRight, with usage of stored value
+        new Button(
+            (state: CalculatorState) => {
+                if (state.stored) {
+                    return {
+                        ...state,
+                        value: Number(
+                            state.value.toString() + state.stored.toString()
+                        ),
+                    };
+                }
+
+                return {
+                    ...state,
+                };
+            },
+            (state) => `${state.stored} (STORE)`
+        ),
+    ];
+}
+
+function inv10() {
+    return new Button(
+        (state: CalculatorState) => {
+            const sign = extractSign(state.value);
+            const value = Math.abs(state.value);
+
+            let result = "";
+            for (const d of value.toString()) {
+                const digit = Number(d);
+                if (digit > 0) {
+                    result += (10 - digit).toString();
+                } else {
+                    result += digit.toString();
+                }
+            }
+            return {
+                ...state,
+                value: sign * Number(result),
+            };
+        },
+        () => `INV10`
+    );
+}
+
 export {
     add,
     subtract,
@@ -271,4 +329,6 @@ export {
     cycleRight,
     mirror,
     addButtonValue,
+    store,
+    inv10,
 };
