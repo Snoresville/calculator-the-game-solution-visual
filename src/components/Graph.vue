@@ -11,7 +11,7 @@ import {
 // @ts-ignore This is obviously imported...
 import Gradient from "javascript-color-gradient";
 import { onMounted, onUnmounted, ref } from "vue";
-import { generateLevelSolutions } from "../calculator";
+import { CalculatorState, generateLevelSolutions } from "../calculator";
 import { Level } from "../calculator/levels";
 
 const { selectedLevel } = defineProps<{
@@ -91,28 +91,31 @@ function renderLevel(level?: Level) {
             .setMidpoint(solution.length - 1)
             .getColors();
 
-        let current = initial;
+        let current: CalculatorState = {
+            value: initial,
+            operationModifier: 0,
+        };
         for (const [index, operation] of Object.entries(solution)) {
             const prev = current;
             current = operation.eval(current);
 
-            if (nodeGraph[current] === undefined) {
-                nodeGraph[current] = {
-                    value: current,
+            if (nodeGraph[current.value] === undefined) {
+                nodeGraph[current.value] = {
+                    value: current.value,
                     moveIndex: Number(index) + 1,
                     colour: colours[Number(index)],
                 };
             }
 
             // Links
-            if (nodeLinks[prev] === undefined) {
-                nodeLinks[prev] = {};
+            if (nodeLinks[prev.value] === undefined) {
+                nodeLinks[prev.value] = {};
             }
-            if (nodeLinks[prev][current] === undefined) {
-                nodeLinks[prev][current] = {
-                    source: nodeGraph[prev],
-                    target: nodeGraph[current],
-                    label: operation.getLabel(),
+            if (nodeLinks[prev.value][current.value] === undefined) {
+                nodeLinks[prev.value][current.value] = {
+                    source: nodeGraph[prev.value],
+                    target: nodeGraph[current.value],
+                    label: operation.getLabel(current),
                 };
             }
         }

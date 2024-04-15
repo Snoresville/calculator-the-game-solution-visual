@@ -1,4 +1,5 @@
 import { Button } from "./button";
+import { CalculatorState } from "./types";
 
 export class Calculator {
     buttons: Button[] = [];
@@ -17,25 +18,27 @@ export class Calculator {
         this.depthStack = [];
         this.depthResult = [];
 
-        this.depthCalculate(initial, moves);
+        this.depthCalculate(
+            {
+                value: initial,
+                operationModifier: 0,
+            },
+            moves
+        );
 
         return this.depthResult;
     }
 
-    private validateDepthPath(current: number, operation: Button) {
-        if (operation.eval(current) == current) {
-            return false;
-        }
-
-        if (operation.eval(current).toString().length > 6) {
+    private validateDepthPath(current: CalculatorState, operation: Button) {
+        if (operation.eval(current).value.toString().length > 6) {
             return false;
         }
 
         return true;
     }
 
-    private depthCalculate(current: number, moves: number) {
-        if (current == this.goal) {
+    private depthCalculate(current: CalculatorState, moves: number) {
+        if (current.value == this.goal) {
             this.depthResult.push([...this.depthStack]);
         } else if (moves > 0) {
             for (const button of this.buttons) {

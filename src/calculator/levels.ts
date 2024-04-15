@@ -14,6 +14,7 @@ import {
     cycleLeft,
     cycleRight,
     mirror,
+    addButtonValue,
 } from "./button_templates";
 
 type Level = {
@@ -861,6 +862,66 @@ const LEVELS_SIMPLE_MACHINE: Level[] = [
         goal: 20,
         moves: 8,
         buttons: [sumDigits(), mirror()],
+    },
+    {
+        initial: 10,
+        goal: 15,
+        moves: 3,
+        buttons: [add(2), addButtonValue(1)],
+    },
+    {
+        initial: 0,
+        goal: 14,
+        moves: 4,
+        buttons: [add(2), insertRight(1), addButtonValue(1)],
+    },
+    {
+        initial: 0,
+        goal: 34,
+        moves: 3,
+        buttons: [insertRight(2), insertRight(3), addButtonValue(1)],
+    },
+    {
+        initial: 0,
+        goal: 101,
+        moves: 5,
+        buttons: [add(5), insertRight(2), addButtonValue(2)],
+    },
+    {
+        initial: 0,
+        goal: 28,
+        moves: 5,
+        buttons: [add(2), insertRight(1), addButtonValue(3)],
+    },
+    {
+        initial: 0,
+        goal: 42,
+        moves: 5,
+        buttons: [add(5), subtract(1), multiply(2), addButtonValue(1)],
+    },
+    {
+        initial: 0,
+        goal: 25,
+        moves: 5,
+        buttons: [add(2), subtract(3), multiply(3), addButtonValue(2)],
+    },
+    {
+        initial: 5,
+        goal: 41,
+        moves: 4,
+        buttons: [add(4), add(8), multiply(3), addButtonValue(2)],
+    },
+    {
+        initial: 33,
+        goal: 31,
+        moves: 5,
+        buttons: [add(2), add(3), multiply(4), sumDigits(), addButtonValue(1)],
+    },
+    {
+        initial: 25,
+        goal: 268,
+        moves: 5,
+        buttons: [add(8), multiply(2), multiply(5), addButtonValue(1)],
     },
 ];
 

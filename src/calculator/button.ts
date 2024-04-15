@@ -1,19 +1,22 @@
+import { CalculatorState } from "./types";
+
 export class Button {
-    private evalFunc: (value: number) => number
-    private label = "???";
+    private evalFunc: (state: CalculatorState) => CalculatorState;
+    private labelFunc: (state: CalculatorState) => string;
 
-    constructor(transformationFunc: (value: number) => number, label?: string) {
-        this.evalFunc = transformationFunc
-        if (label) {
-            this.label = label
-        }
+    constructor(
+        transformationFunc: (state: CalculatorState) => CalculatorState,
+        label: (state: CalculatorState) => string
+    ) {
+        this.evalFunc = transformationFunc;
+        this.labelFunc = label;
     }
 
-    eval(incoming: number) {
-        return this.evalFunc ? this.evalFunc(incoming) : incoming;
+    eval(state: CalculatorState) {
+        return this.evalFunc ? this.evalFunc(state) : state;
     }
 
-    getLabel() {
-        return this.label
+    getLabel(state: CalculatorState) {
+        return this.labelFunc(state);
     }
 }
