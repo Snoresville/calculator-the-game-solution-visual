@@ -12,8 +12,6 @@ import {
 import Gradient from "javascript-color-gradient";
 import { onMounted, onUnmounted, ref } from "vue";
 import {
-    CalculatorState,
-    INITIAL_STATE,
     generateLevelSolutions,
 } from "../calculator";
 import { Level } from "../calculator/levels";
@@ -33,6 +31,7 @@ type LinkData = {
     source: NodeData;
     target: NodeData;
     label: string;
+    moveIndex: number;
 };
 let controller: GraphController;
 let nodeObjects: Record<number, GraphNode<string>>;
@@ -41,6 +40,7 @@ function renderLevel(level?: Level) {
     const container = document.getElementById(
         "solutionGraph"
     ) as HTMLDivElement;
+    const nodeOffset = 96
     const { bottom, right, y } = container.getBoundingClientRect();
     // console.log(top, bottom, left, right, x, y)
 
@@ -50,11 +50,12 @@ function renderLevel(level?: Level) {
             forces: {
                 centering: {
                     enabled: false,
-                    // strength: (node: GraphNode) => 0,
                 },
                 link: {
-                    enabled: false,
-                    // length: (link: any) => link.length,
+                    // enabled: false,
+                    length: (link: any) => {
+                        return link.length
+                    },
                 },
             },
         },
@@ -95,19 +96,16 @@ function renderLevel(level?: Level) {
             .setMidpoint(solution.length - 1)
             .getColors();
 
-        let current: CalculatorState = {
-            ...INITIAL_STATE,
-            value: initial,
-        };
-        for (const [index, operation] of Object.entries(solution)) {
-            const prev = current;
-            current = operation.eval(current);
+        const states = Object.values(solution)
+        for (let i = 0; i < states.length - 1; i++) {
+            const prev = solution[i];
+            const current = solution[i + 1];
 
             if (nodeGraph[current.value] === undefined) {
                 nodeGraph[current.value] = {
                     value: current.value,
-                    moveIndex: Number(index) + 1,
-                    colour: colours[Number(index)],
+                    moveIndex: i + 1,
+                    colour: colours[i],
                 };
             }
 
@@ -119,7 +117,8 @@ function renderLevel(level?: Level) {
                 nodeLinks[prev.value][current.value] = {
                     source: nodeGraph[prev.value],
                     target: nodeGraph[current.value],
-                    label: operation.getLabel(prev),
+                    label: current.lastOperationLabel,
+                    moveIndex: i + 1
                 };
             }
         }
@@ -143,22 +142,25 @@ function renderLevel(level?: Level) {
                 radius: 35,
                 fx:
                     data.moveIndex == 0
-                        ? 64
+                        ? nodeOffset
                         : data.moveIndex == moves
-                        ? right - 64
-                        : undefined,
+                            ? right - nodeOffset
+                            : undefined,
                 fy:
                     data.moveIndex == 0
-                        ? 64
+                        ? bottom - y - nodeOffset
                         : data.moveIndex == moves
-                        ? bottom - y - 64
-                        : undefined,
+                            ? nodeOffset
+                            : undefined,
             });
 
             return nodes;
         },
         {}
     );
+
+    const averageLinkLength = Math.hypot(right, bottom - y) / moves;
+    const averageLinkLengthRatio = 0.8
 
     const linkObjects = Object.values(nodeLinks).reduce(
         (links: GraphLink[], data) => {
@@ -174,7 +176,8 @@ function renderLevel(level?: Level) {
                             fontSize: "2rem",
                             text: link.label,
                         },
-                        length: 128,
+                        length: averageLinkLength * averageLinkLengthRatio
+                        // length: 256 * ((link.moveIndex * (moves + 1 - link.moveIndex)) / Math.pow(((moves) / 2), 2)),
                     })
                 );
             }
@@ -209,6 +212,7 @@ onUnmounted(() => {
 
 <style>
 #solutionGraph {
+    /* grid-area: levelSolutionGraph; */
     width: 100vw;
     height: 50vh;
     background-color: beige;
@@ -228,7 +232,7 @@ Graph CSS
 */
 
 .graph,
-.graph > svg {
+.graph>svg {
     display: block;
 }
 

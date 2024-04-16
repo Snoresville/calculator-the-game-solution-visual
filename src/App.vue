@@ -15,7 +15,25 @@ function onLevelSelect(level: Level) {
 </script>
 
 <template>
-    <LevelSelect @level-select="onLevelSelect" />
-    <Calculator />
-    <Graph :key="`graphLevel${graphID}`" :selected-level="currentLevel" />
+    <div class="app-layout">
+        <div class="top-bar">
+            <LevelSelect @level-select="onLevelSelect" />
+        </div>
+        <Calculator />
+        <Graph :key="`graphLevel${graphID}`" :selected-level="currentLevel" />
+    </div>
 </template>
+
+<style>
+.top-bar {
+    height: 75px;
+}
+
+.app-layout {
+    display: grid;
+    grid-template-areas:
+        "topbar topbar"
+        "calculator help"
+        "solutionGraph solutionGraph";
+}
+</style>

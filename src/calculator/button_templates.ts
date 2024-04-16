@@ -84,7 +84,7 @@ function insertRight(n: number) {
                 ...state,
                 value: Number(
                     state.value.toString() +
-                        (n + state.operationModifier).toString()
+                    (n + state.operationModifier).toString()
                 ),
             };
         },
@@ -96,6 +96,16 @@ function replace(before: number | string, after: number | string) {
     return new Button(
         (state: CalculatorState) => {
             const regex = new RegExp(`${before}`, "g");
+            const result = Number(state.value.toString().replace(regex, after.toString()))
+
+            if (result == state.value) {
+                // Stops graph from visualising unnecessary moves
+                return {
+                    ...state,
+                    value: Number.NaN
+                }
+            }
+
             return {
                 ...state,
                 value: Number(
@@ -136,12 +146,21 @@ function reverse() {
         (state: CalculatorState) => {
             const sign = extractSign(state.value);
             const value = Math.abs(state.value);
+            const result = sign *
+                Number(value.toString().split("").reverse().join(""))
+
+            if (result == state.value) {
+                // Stops graph from visualising unnecessary moves
+                return {
+                    ...state,
+                    value: Number.NaN
+                }
+            }
 
             return {
                 ...state,
                 value:
-                    sign *
-                    Number(value.toString().split("").reverse().join("")),
+                    result
             };
         },
         () => `REVERSE`
@@ -165,6 +184,16 @@ function sumDigits() {
                 sum += value % 10;
                 value = (value - (value % 10)) / 10;
             }
+
+            const result = sign * sum
+            if (result == state.value) {
+                // Stops graph from visualising unnecessary moves
+                return {
+                    ...state,
+                    value: Number.NaN
+                }
+            }
+
             return {
                 ...state,
                 value: sign * sum,
@@ -214,7 +243,7 @@ function cycleRight() {
                     sign *
                     Number(
                         valueString[valueString.length - 1] +
-                            valueString.slice(0, -1)
+                        valueString.slice(0, -1)
                     ),
             };
         },
@@ -234,7 +263,7 @@ function mirror() {
                     sign *
                     Number(
                         value.toString() +
-                            value.toString().split("").reverse().join("")
+                        value.toString().split("").reverse().join("")
                     ),
             };
         },
