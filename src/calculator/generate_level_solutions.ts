@@ -2,7 +2,10 @@ import { Calculator } from "./calculator";
 import { Level } from "./levels";
 
 export function generateLevelSolutions(level: Level) {
-    const calculator = new Calculator(level.buttons);
+    const calculator = new Calculator({
+        buttons: level.buttons,
+        portalPos: level.portalPos,
+    });
     const results = calculator.calculate(
         level.initial,
         level.goal,

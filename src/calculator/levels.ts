@@ -24,6 +24,7 @@ type Level = {
     goal: number;
     moves: number;
     buttons: Button[];
+    portalPos?: [number, number];
 };
 
 const LEVELS_SIMPLE_MACHINE: Level[] = [
@@ -1170,6 +1171,41 @@ const LEVELS_SIMPLE_MACHINE: Level[] = [
             replace(39, 33),
             inv10(),
         ],
+    },
+    {
+        initial: 99,
+        goal: 10,
+        moves: 3,
+        buttons: [subtract(1), insertRight(1)],
+        portalPos: [3, 1],
+    },
+    {
+        initial: 9,
+        goal: 64,
+        moves: 2,
+        buttons: [insertRight(4), insertRight(6)],
+        portalPos: [3, 2],
+    },
+    {
+        initial: 50,
+        goal: 35,
+        moves: 3,
+        buttons: [add(5), multiply(3), multiply(5)],
+        portalPos: [3, 2],
+    },
+    {
+        initial: 306,
+        goal: 131,
+        moves: 4,
+        buttons: [add(1), multiply(2), insertRight(3)],
+        portalPos: [4, 1],
+    },
+    {
+        initial: 321,
+        goal: 123,
+        moves: 5,
+        buttons: [divide(2), insertRight(0), insertRight(1), insertRight(3)],
+        portalPos: [4, 1],
     },
 ];
 
