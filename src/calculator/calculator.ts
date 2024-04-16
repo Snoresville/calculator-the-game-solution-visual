@@ -56,19 +56,16 @@ export class Calculator {
                 };
             }
 
-            console.log("while", valueString);
             const portalValue =
                 Number(valueString[portalEntryIndex]) *
                 Math.pow(10, this.portalPos[1] - 1);
             const newValue =
                 Number(
                     valueString.substring(0, portalEntryIndex) +
-                        "0" +
                         valueString.substring(portalEntryIndex + 1)
                 ) + portalValue;
             valueString = newValue.toString();
             portalEntryIndex = valueString.length - this.portalPos[0];
-            // break;
         }
 
         return {
